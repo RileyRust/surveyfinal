@@ -1,0 +1,20 @@
+
+%d	integer
+%lf	double
+%f	float
+%c	character
+%s	string
+%.2f	double with 2 decimals
+%.0f	no decimals
+&&     AND
+!     NOT
+
+scanf("datatype", &whatiscalled); //correct realine
+printf("prompt (datatype)\n", variablename); //correct print that calls
+char = 'M'; //correct char 
+
+
+Clear leftover input:	while (getchar() != '\n');
+Read one character:	char c = getchar();
+Pause program:	getchar();
+Fix scanf + char input:	scanf("%d",&x); while(getchar()!='\n');
