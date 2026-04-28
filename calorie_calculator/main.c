@@ -5,8 +5,23 @@ double getinch();
 double getweight();
 char getsex();
 int getactivitylevel();
+double calculate_bmr(double weightKg, double heightCm, int age, char sex);
+double calculate_tdee(double bmr, int activity);
+void run_tests();
+
+
 
 int main() {
+
+
+
+    #ifdef TEST
+        run_tests();
+        return 0;
+    #endif
+
+
+
     int age;
     double heightinfeet;
     double heightininches;
@@ -15,6 +30,7 @@ int main() {
     double total_in;
     double heightCm;
     double weightKg;
+    double BMI;
     double BMR;
     double multiplier;
     int activity;
@@ -30,25 +46,19 @@ int main() {
 
 
     // converting to cm and kilos because thats what the equation asked for 
-   total_in = (heightinfeet * 12) + heightininches;
+    total_in = (heightinfeet * 12) + heightininches;
     heightCm = total_in * 2.54;
     weightKg = weight * 0.45359237;
 
-    // bmr calc
-    if (sex == 'M' || sex == 'm') {
-        BMR = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
-    } else {
-        BMR = (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
-    }
 
-    // how active they are 
-    if (activity == 1) multiplier = 1.2;
-    else if (activity == 2) multiplier = 1.375;
-    else if (activity == 3) multiplier = 1.55;
-    else if (activity == 4) multiplier = 1.725;
-    else multiplier = 1.9;
+    double heightMeters = heightCm / 100.0;
+    BMI = weightKg / (heightMeters * heightMeters);
 
-    double TDEE = BMR * multiplier;
+    BMR = calculate_bmr(weightKg, heightCm, age, sex);
+    double TDEE = calculate_tdee(BMR, activity);
+
+
+
 
     //goal 
     int goal;
@@ -105,10 +115,75 @@ int main() {
     printf("Calorie Goal: %.0f calories per day\n", tc);
      printf("\n");
 
+
+
+
+     //tells you if you fitness based on body mass index
+     printf("BMI: %.1f\n", BMI);
+
+    if (BMI < 18.5) {
+    printf("BMI Category: Underweight\n");
+    } else if (BMI < 25.0) {
+    printf("BMI Category: Normal weight\n");
+    } else if (BMI < 30.0) {
+    printf("BMI Category: Overweight\n");
+    } else {
+    printf("BMI Category: Obese\n");
+    }
+    printf("\n");
+
+
+    // which diet you are choosing 
+    int macroChoice;
+
+    printf("\nChoose your meal style\n");
+    printf("1 = Balanced (30%% protein, 40%% carbs, 30%% fat)\n");
+    printf("2 = High Protein (40%% protein, 30%% carbs, 30%% fat)\n");
+    printf("3 = Low Carb (30%% protein, 20%% carbs, 50%% fat)\n");
+    printf("4 = Keto (20%% protein, 5%% carbs, 75%% fat)\n");
+
+    do {
+    printf("Enter choice (1-4): ");
+    if (scanf("%d", &macroChoice) != 1 || macroChoice < 1 || macroChoice > 4) {
+        printf("Invalid choice. Enter 1–4.\n");
+        while (getchar() != '\n');
+        macroChoice = -1;
+    }
+    } while (macroChoice < 1 || macroChoice > 4);
+
+    double pPercent, cPercent, fPercent;
+
+    if (macroChoice == 1) {
+    pPercent = 0.30;
+    cPercent = 0.40;
+    fPercent = 0.30;
+    printf("\nBalanced\n");
+    }
+    else if (macroChoice == 2) {
+    pPercent = 0.40;
+    cPercent = 0.30;
+    fPercent = 0.30;
+    printf("\nHigh Protein\n");
+    }
+    else if (macroChoice == 3) {
+    pPercent = 0.30;
+    cPercent = 0.20;
+    fPercent = 0.50;
+    printf("\nLow Carb\n");
+    }
+    else {
+    pPercent = 0.20;
+    cPercent = 0.05;
+    fPercent = 0.75;
+    printf("\nKeto\n");
+    }
+
     double b = tc * 0.25;
     double l = tc * 0.30;
     double d = tc * 0.30;
     double s = tc * 0.15;
+
+
 
 
     double bp;
@@ -168,6 +243,51 @@ int main() {
     printf("Protein: %.0f g\n", snp);
     printf("Carbs:   %.0f g\n", snc);
     printf("Fat:     %.0f g\n", snf);
+
+
+
+
+    // save results
+    char saveChoice;
+
+    printf("\n save your results? y or n ");
+        scanf(" %c", &saveChoice);
+
+    if (saveChoice == 'Y' || saveChoice == 'y') {
+
+        FILE *file = fopen("results.txt", "w");
+
+    if (file == NULL) {
+        printf("Error: Could not open file for writing.\n");
+    } else {
+
+        fprintf(file, "calorie calculator results \n\n");
+        fprintf(file, "Age %d\n", age);
+        fprintf(file, "Sex %c\n", sex);
+        fprintf(file, "Height %.0f ft %.0f in\n", heightinfeet, heightininches);
+        fprintf(file, "Weight %.1f lbs\n\n", weight);
+
+        fprintf(file, "BMR %.2f calories/day\n", BMR);
+        fprintf(file, "TDEE %.2f calories/day\n", TDEE);
+        fprintf(file, "Calorie Goal %.0f calories/day\n\n", tc);
+
+        fprintf(file, "BMI %.1f\n", BMI);
+        if (BMI < 18.5) fprintf(file, "Underweight\n\n");
+        else if (BMI < 25.0) fprintf(file, "Normal weight\n\n");
+        else if (BMI < 30.0) fprintf(file, "Overweight\n\n");
+        else fprintf(file, " Obese\n\n");
+
+        fprintf(file, "meal breakdown\n");
+        fprintf(file, "Breakfast %.0f calories P %.0f g C %.0f g F %.0f g\n", b, bp, bc, bf);
+        fprintf(file, "Lunch: %.0f calories P %.0f g C %.0f g F %.0f g\n", l, lp, lc, lf);
+        fprintf(file, "Dinner: %.0f calories P %.0f g C %.0f g F %.0f g\n", d, dp, dc, df);
+        fprintf(file, "Snacks: %.0f calories P %.0f g C %.0f g F %.0f g\n", s, snp, snc, snf);
+
+        fclose(file);
+        printf("\nYour results have been saved to results.txt\n");
+    }
+}
+
     
 
     // end menu
@@ -191,6 +311,20 @@ int main() {
 
 
 
+#ifdef TEST
+void run_tests() {
+    printf("Running internal tests...\n\n");
+
+    double bmr1 = calculate_bmr(70, 175, 25, 'M');
+    printf("BMR Test 1 (Male): %.2f\n", bmr1);
+
+    double bmr2 = calculate_bmr(60, 160, 30, 'F');
+    printf("BMR Test 2 (Female): %.2f\n", bmr2);
+
+    double tdee1 = calculate_tdee(bmr1, 3);
+    printf("TDEE Test 1 (Activity 3): %.2f\n", tdee1);
+}
+#endif
 
 
 
@@ -290,4 +424,25 @@ int getactivitylevel(){
 
     return activity; 
 
+}
+
+
+double calculate_bmr(double weightKg, double heightCm, int age, char sex) {
+    if (sex == 'M' || sex == 'm') {
+        return (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
+    } else {
+        return (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
+    }
+}
+
+double calculate_tdee(double bmr, int activity) {
+    double multiplier;
+
+    if (activity == 1) multiplier = 1.2;
+    else if (activity == 2) multiplier = 1.375;
+    else if (activity == 3) multiplier = 1.55;
+    else if (activity == 4) multiplier = 1.725;
+    else multiplier = 1.9;
+
+    return bmr * multiplier;
 }

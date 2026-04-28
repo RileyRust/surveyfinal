@@ -1,0 +1,19 @@
+calorie calculator results 
+
+Age 23
+Sex m
+Height 5 ft 10 in
+Weight 170.0 lbs
+
+BMR 1772.36 calories/day
+TDEE 3057.32 calories/day
+Calorie Goal 3557 calories/day
+
+BMI 24.4
+Normal weight
+
+meal breakdown
+Breakfast 889 calories P 67 g C 89 g F 30 g
+Lunch: 1067 calories P 80 g C 107 g F 36 g
+Dinner: 1067 calories P 80 g C 36 g F 36 g
+Snacks: 534 calories P 40 g C 53 g F 18 g
