@@ -18,3 +18,55 @@ Clear leftover input:	while (getchar() != '\n');
 Read one character:	char c = getchar();
 Pause program:	getchar();
 Fix scanf + char input:	scanf("%d",&x); while(getchar()!='\n');
+
+
+BMI:  
+BMI = weight_kg / (height_m * height_m)
+
+Pounds → Kilograms:  
+kg = lbs * 0.453592
+
+Feet + Inches → Meters:  
+m = ((feet * 12) + inches) * 0.0254
+
+Feet + Inches → Centimeters:  
+cm = ((feet * 12) + inches) * 2.54
+
+
+Male:  
+BMR = (10 * kg) + (6.25 * cm) - (5 * age) + 5
+
+Female:  
+BMR = (10 * kg) + (6.25 * cm) - (5 * age) - 161
+
+Activity Multipliers (for TDEE)
+Sedentary = 1.2
+Light = 1.375
+Moderate = 1.55
+VeryActive = 1.725
+SuperActive = 1.9
+
+TDEE = BMR * activity_multiplier
+
+
+LoseWeightCalories = TDEE - 500
+GainWeightCalories = TDEE + 300 (to 500)
+MaintainCalories = TDEE
+
+
+ProteinCalories = protein_g * 4
+CarbCalories = carbs_g * 4
+FatCalories = fat_g * 9
+
+
+Male:  
+IBW_kg = 50 + (2.3 * inches_over_5ft)
+
+Female:  
+IBW_kg = 45.5 + (2.3 * inches_over_5ft)
+
+Where:
+inches_over_5ft = (total_inches - 60)
+
+Balanced: 40% carbs, 30% protein, 30% fat
+HighProtein: 30% carbs, 40% protein, 30% fat
